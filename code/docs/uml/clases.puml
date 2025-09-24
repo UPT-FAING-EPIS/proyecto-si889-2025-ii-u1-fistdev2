@@ -1,0 +1,367 @@
+@startuml DevFlow_Classes
+
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+
+package "Frontend (Next.js)" {
+  class AuthPage {
+    +renderLogin()
+    +renderRegister()
+    +handleSubmit()
+    +validateForm()
+  }
+  
+  class Dashboard {
+    +renderKanban()
+    +handleDragDrop()
+    +filterTasks()
+    +loadProjects()
+  }
+  
+  class ProjectPage {
+    +renderProjectList()
+    +createProject()
+    +editProject()
+    +deleteProject()
+  }
+  
+  class AnalysisPage {
+    +renderUMLEditor()
+    +generateDiagram()
+    +exportPlantUML()
+    +validateSyntax()
+  }
+  
+  class DesignPage {
+    +renderTokenEditor()
+    +renderWireframeEditor()
+    +previewComponents()
+    +exportAssets()
+  }
+  
+  class CodingPage {
+    +renderCodeEditor()
+    +renderTerminal()
+    +gitIntegration()
+    +autoComplete()
+  }
+  
+  class TestingPage {
+    +runTests()
+    +showCoverage()
+    +generateReports()
+    +configureTests()
+  }
+  
+  class DeployPage {
+    +buildApp()
+    +deployApp()
+    +monitorHealth()
+    +rollbackDeploy()
+  }
+  
+  class MonitoringPage {
+    +renderDashboard()
+    +showMetrics()
+    +configureAlerts()
+    +viewLogs()
+  }
+  
+  class ApiService {
+    +get(url: string)
+    +post(url: string, data: any)
+    +put(url: string, data: any) 
+    +delete(url: string)
+    +setAuthHeader(token: string)
+  }
+  
+  class AuthContext {
+    +user: User
+    +token: string
+    +login(credentials)
+    +logout()
+    +isAuthenticated()
+  }
+}
+
+package "Backend (NestJS)" {
+  class AuthController {
+    +login(credentials: LoginDto)
+    +register(userData: RegisterDto)
+    +profile(userId: string)
+    +refreshToken(token: string)
+  }
+  
+  class ProjectController {
+    +getProjects(userId: string)
+    +createProject(projectData: CreateProjectDto)
+    +updateProject(id: string, data: UpdateProjectDto)
+    +deleteProject(id: string)
+  }
+  
+  class TaskController {
+    +getTasks(projectId: string)
+    +createTask(taskData: CreateTaskDto)
+    +updateTask(id: string, data: UpdateTaskDto)
+    +deleteTask(id: string)
+  }
+  
+  class AnalysisController {
+    +generateUML(projectId: string)
+    +saveUMLDiagram(diagramData: UMLDto)
+    +exportPlantUML(diagramId: string)
+  }
+  
+  class DesignController {
+    +getDesignTokens(projectId: string)
+    +saveDesignTokens(tokens: DesignTokensDto)
+    +generateWireframe(wireframeData: WireframeDto)
+  }
+  
+  class CodingController {
+    +getCodeFiles(projectId: string)
+    +saveCodeFile(fileData: CodeFileDto)
+    +executeCode(code: string)
+  }
+  
+  class TestController {
+    +runTests(projectId: string)
+    +getTestResults(projectId: string)
+    +configureTests(config: TestConfigDto)
+  }
+  
+  class DeployController {
+    +deployProject(projectId: string)
+    +getDeployStatus(deployId: string)
+    +rollbackDeploy(deployId: string)
+  }
+  
+  class MonitoringController {
+    +getMetrics(projectId: string)
+    +configureAlerts(alertConfig: AlertDto)
+    +getLogs(projectId: string, filters: LogFilterDto)
+  }
+}
+
+package "Services (Application Layer)" {
+  class AuthService {
+    +validateUser(email: string, password: string)
+    +generateJWT(user: User)
+    +hashPassword(password: string)
+    +verifyToken(token: string)
+  }
+  
+  class ProjectService {
+    +findAllByUser(userId: string)
+    +createProject(data: CreateProjectDto)
+    +updateProject(id: string, data: UpdateProjectDto)
+    +deleteProject(id: string)
+  }
+  
+  class TaskService {
+    +findByProject(projectId: string)
+    +createTask(data: CreateTaskDto)
+    +updateTaskStatus(id: string, status: TaskStatus)
+    +assignTask(taskId: string, userId: string)
+  }
+  
+  class AnalysisService {
+    +generateClassDiagram(projectId: string)
+    +generateSequenceDiagram(projectId: string)
+    +parseUMLCode(umlCode: string)
+    +validateUMLSyntax(code: string)
+  }
+  
+  class DesignService {
+    +generateTokens(designData: any)
+    +validateTokens(tokens: DesignTokens)
+    +generateWireframe(components: Component[])
+    +exportAssets(projectId: string)
+  }
+  
+  class CodingService {
+    +scaffoldProject(template: string)
+    +executeCode(code: string, language: string)
+    +validateSyntax(code: string, language: string)
+    +generateSnippets(context: string)
+  }
+  
+  class TestService {
+    +runUnitTests(projectId: string)
+    +runIntegrationTests(projectId: string)
+    +generateCoverage(projectId: string)
+    +configureTestSuite(config: TestConfig)
+  }
+  
+  class DeployService {
+    +buildProject(projectId: string)
+    +deployToEnvironment(projectId: string, env: string)
+    +checkHealthStatus(deployId: string)
+    +performRollback(deployId: string)
+  }
+  
+  class MonitoringService {
+    +collectMetrics(projectId: string)
+    +processLogs(projectId: string)
+    +triggerAlerts(condition: AlertCondition)
+    +generateReports(projectId: string)
+  }
+}
+
+package "Domain Entities" {
+  class User {
+    +id: string
+    +email: string
+    +password: string
+    +name: string
+    +roles: Role[]
+    +createdAt: Date
+    +updatedAt: Date
+  }
+  
+  class Project {
+    +id: string
+    +name: string
+    +description: string
+    +status: ProjectStatus
+    +startDate: Date
+    +endDate: Date
+    +userId: string
+    +tasks: Task[]
+  }
+  
+  class Task {
+    +id: string
+    +title: string
+    +description: string
+    +status: TaskStatus
+    +priority: Priority
+    +projectId: string
+    +assignedUserId: string
+    +estimatedHours: number
+  }
+  
+  class UMLDiagram {
+    +id: string
+    +type: DiagramType
+    +content: string
+    +projectId: string
+    +version: number
+    +createdAt: Date
+  }
+  
+  class DesignTokens {
+    +id: string
+    +colors: ColorPalette
+    +typography: Typography
+    +spacing: Spacing
+    +projectId: string
+    +version: number
+  }
+  
+  class CodeFile {
+    +id: string
+    +filename: string
+    +content: string
+    +language: string
+    +projectId: string
+    +lastModified: Date
+  }
+  
+  class TestResult {
+    +id: string
+    +testSuite: string
+    +passed: number
+    +failed: number
+    +coverage: number
+    +projectId: string
+    +runAt: Date
+  }
+  
+  class Deployment {
+    +id: string
+    +version: string
+    +environment: string
+    +status: DeployStatus
+    +projectId: string
+    +deployedAt: Date
+  }
+  
+  class Metric {
+    +id: string
+    +name: string
+    +value: number
+    +timestamp: Date
+    +projectId: string
+    +tags: MetricTag[]
+  }
+}
+
+package "Infrastructure" {
+  class UserRepository {
+    +findByEmail(email: string)
+    +findById(id: string)
+    +create(userData: CreateUserDto)
+    +update(id: string, data: UpdateUserDto)
+  }
+  
+  class ProjectRepository {
+    +findAllByUser(userId: string)
+    +findById(id: string)
+    +create(projectData: CreateProjectDto)
+    +update(id: string, data: UpdateProjectDto)
+    +delete(id: string)
+  }
+  
+  class TaskRepository {
+    +findByProject(projectId: string)
+    +findById(id: string)
+    +create(taskData: CreateTaskDto)
+    +update(id: string, data: UpdateTaskDto)
+    +delete(id: string)
+  }
+  
+  class CacheService {
+    +get(key: string)
+    +set(key: string, value: any, ttl: number)
+    +delete(key: string)
+    +flush()
+  }
+  
+  class LoggerService {
+    +log(message: string, context: string)
+    +error(message: string, trace: string)
+    +warn(message: string)
+    +debug(message: string)
+  }
+}
+
+' Relationships
+AuthPage --> ApiService : uses
+Dashboard --> ApiService : uses
+ProjectPage --> ApiService : uses
+AuthPage --> AuthContext : uses
+Dashboard --> AuthContext : uses
+
+AuthController --> AuthService : uses
+ProjectController --> ProjectService : uses
+TaskController --> TaskService : uses
+
+AuthService --> UserRepository : uses
+ProjectService --> ProjectRepository : uses
+TaskService --> TaskRepository : uses
+
+AuthService --> CacheService : uses
+AuthService --> LoggerService : uses
+
+User ||--o{ Project : owns
+Project ||--o{ Task : contains
+Project ||--o{ UMLDiagram : has
+Project ||--o{ DesignTokens : has
+Project ||--o{ CodeFile : contains
+Project ||--o{ TestResult : has
+Project ||--o{ Deployment : has
+Project ||--o{ Metric : generates
+
+@enduml

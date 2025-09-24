@@ -1,0 +1,319 @@
+{
+  "alerts": [
+    {
+      "id": "high-response-time",
+      "name": "Alto Tiempo de Respuesta",
+      "description": "El tiempo de respuesta P95 está por encima del umbral",
+      "severity": "warning",
+      "condition": {
+        "query": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job='devflow-backend'}[5m]))",
+        "operator": ">",
+        "threshold": 1.0,
+        "duration": "5m"
+      },
+      "actions": [
+        {
+          "type": "email",
+          "recipients": ["admin@devflow.com", "ops@devflow.com"],
+          "subject": "DevFlow: Alto tiempo de respuesta detectado",
+          "template": "high_response_time"
+        },
+        {
+          "type": "slack",
+          "channel": "#alerts",
+          "message": "🚨 Alto tiempo de respuesta en DevFlow: {{$value}}s"
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "critical-response-time",
+      "name": "Tiempo de Respuesta Crítico",
+      "description": "El tiempo de respuesta P95 está en nivel crítico",
+      "severity": "critical",
+      "condition": {
+        "query": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job='devflow-backend'}[5m]))",
+        "operator": ">",
+        "threshold": 3.0,
+        "duration": "2m"
+      },
+      "actions": [
+        {
+          "type": "pagerduty",
+          "service_key": "devflow-critical",
+          "message": "CRÍTICO: Tiempo de respuesta muy alto en DevFlow"
+        },
+        {
+          "type": "email",
+          "recipients": ["admin@devflow.com", "ops@devflow.com"],
+          "subject": "CRÍTICO: DevFlow tiempo de respuesta",
+          "template": "critical_response_time"
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "high-error-rate",
+      "name": "Alta Tasa de Errores",
+      "description": "La tasa de errores 5xx está por encima del 5%",
+      "severity": "critical",
+      "condition": {
+        "query": "(rate(http_requests_total{status=~'5..', job='devflow-backend'}[5m]) / rate(http_requests_total{job='devflow-backend'}[5m])) * 100",
+        "operator": ">",
+        "threshold": 5.0,
+        "duration": "3m"
+      },
+      "actions": [
+        {
+          "type": "slack",
+          "channel": "#alerts",
+          "message": "🔥 Alta tasa de errores en DevFlow: {{$value}}%"
+        },
+        {
+          "type": "email",
+          "recipients": ["admin@devflow.com"],
+          "subject": "DevFlow: Alta tasa de errores detectada"
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "service-down",
+      "name": "Servicio Caído",
+      "description": "El backend de DevFlow no está respondiendo",
+      "severity": "critical",
+      "condition": {
+        "query": "up{job='devflow-backend'}",
+        "operator": "==",
+        "threshold": 0,
+        "duration": "30s"
+      },
+      "actions": [
+        {
+          "type": "pagerduty",
+          "service_key": "devflow-critical",
+          "message": "CRÍTICO: Servicio DevFlow backend está caído"
+        },
+        {
+          "type": "slack",
+          "channel": "#alerts",
+          "message": "🚨 SERVICIO CAÍDO: DevFlow backend no responde"
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "high-cpu-usage",
+      "name": "Alto Uso de CPU",
+      "description": "El uso de CPU está por encima del 85%",
+      "severity": "warning",
+      "condition": {
+        "query": "avg(cpu_usage{container='devflow-backend'}) * 100",
+        "operator": ">",
+        "threshold": 85,
+        "duration": "10m"
+      },
+      "actions": [
+        {
+          "type": "email",
+          "recipients": ["ops@devflow.com"],
+          "subject": "DevFlow: Alto uso de CPU"
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "high-memory-usage",
+      "name": "Alto Uso de Memoria",
+      "description": "El uso de memoria está por encima del 90%",
+      "severity": "critical",
+      "condition": {
+        "query": "avg(memory_usage{container='devflow-backend'}) * 100",
+        "operator": ">",
+        "threshold": 90,
+        "duration": "5m"
+      },
+      "actions": [
+        {
+          "type": "slack",
+          "channel": "#alerts",
+          "message": "⚠️ Alto uso de memoria en DevFlow: {{$value}}%"
+        },
+        {
+          "type": "email",
+          "recipients": ["ops@devflow.com"],
+          "subject": "DevFlow: Alto uso de memoria"
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "database-connection-exhaustion",
+      "name": "Agotamiento de Conexiones DB",
+      "description": "Las conexiones a la base de datos están cerca del límite",
+      "severity": "warning",
+      "condition": {
+        "query": "pg_stat_activity_count{database='devflow'}",
+        "operator": ">",
+        "threshold": 150,
+        "duration": "5m"
+      },
+      "actions": [
+        {
+          "type": "slack",
+          "channel": "#alerts",
+          "message": "📊 Alto número de conexiones DB: {{$value}}"
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "disk-space-low",
+      "name": "Poco Espacio en Disco",
+      "description": "El espacio en disco está por debajo del 20%",
+      "severity": "warning",
+      "condition": {
+        "query": "(disk_free{mount='/'} / disk_total{mount='/'}) * 100",
+        "operator": "<",
+        "threshold": 20,
+        "duration": "1m"
+      },
+      "actions": [
+        {
+          "type": "email",
+          "recipients": ["ops@devflow.com"],
+          "subject": "DevFlow: Poco espacio en disco"
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "failed-deployments",
+      "name": "Deployment Fallido",
+      "description": "Se detectó un deployment fallido",
+      "severity": "high",
+      "condition": {
+        "query": "deployment_status{status='failed'}",
+        "operator": ">",
+        "threshold": 0,
+        "duration": "1m"
+      },
+      "actions": [
+        {
+          "type": "slack",
+          "channel": "#deployments",
+          "message": "💥 Deployment fallido detectado en DevFlow"
+        },
+        {
+          "type": "email",
+          "recipients": ["dev@devflow.com"],
+          "subject": "DevFlow: Deployment fallido"
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "redis-connection-failed",
+      "name": "Conexión Redis Fallida",
+      "description": "No se puede conectar a Redis",
+      "severity": "high",
+      "condition": {
+        "query": "redis_up{instance='devflow-redis'}",
+        "operator": "==",
+        "threshold": 0,
+        "duration": "30s"
+      },
+      "actions": [
+        {
+          "type": "slack",
+          "channel": "#alerts",
+          "message": "🔴 Redis no disponible en DevFlow"
+        }
+      ],
+      "enabled": true
+    }
+  ],
+  "notification_channels": [
+    {
+      "name": "email-ops",
+      "type": "email",
+      "settings": {
+        "smtp_host": "smtp.gmail.com",
+        "smtp_port": 587,
+        "from": "alerts@devflow.com",
+        "username": "alerts@devflow.com",
+        "password": "${EMAIL_PASSWORD}",
+        "starttls": true
+      }
+    },
+    {
+      "name": "slack-alerts",
+      "type": "slack",
+      "settings": {
+        "webhook_url": "${SLACK_WEBHOOK_URL}",
+        "channel": "#alerts",
+        "username": "DevFlow Alerts"
+      }
+    },
+    {
+      "name": "pagerduty-critical",
+      "type": "pagerduty",
+      "settings": {
+        "integration_key": "${PAGERDUTY_INTEGRATION_KEY}",
+        "service_name": "DevFlow"
+      }
+    }
+  ],
+  "escalation_policies": [
+    {
+      "name": "standard-escalation",
+      "steps": [
+        {
+          "timeout": "5m",
+          "channels": ["slack-alerts"]
+        },
+        {
+          "timeout": "15m",
+          "channels": ["email-ops"]
+        },
+        {
+          "timeout": "30m",
+          "channels": ["pagerduty-critical"]
+        }
+      ]
+    }
+  ],
+  "maintenance_windows": [
+    {
+      "name": "weekly-maintenance",
+      "description": "Ventana de mantenimiento semanal",
+      "schedule": {
+        "day_of_week": "sunday",
+        "start_time": "02:00",
+        "duration": "4h",
+        "timezone": "UTC"
+      },
+      "alerts_suppressed": [
+        "high-response-time",
+        "service-down"
+      ]
+    }
+  ],
+  "global_settings": {
+    "resolve_timeout": "5m",
+    "group_wait": "30s",
+    "group_interval": "5m",
+    "repeat_interval": "12h",
+    "inhibit_rules": [
+      {
+        "source_match": {
+          "severity": "critical"
+        },
+        "target_match": {
+          "severity": "warning"
+        },
+        "equal": ["alertname", "instance"]
+      }
+    ]
+  }
+}

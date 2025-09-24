@@ -1,0 +1,251 @@
+{
+  "name": "DevFlow Web Plan",
+  "desc": "Sistema integral para desarrollo de aplicaciones web",
+  "lists": [
+    {
+      "id": "1",
+      "name": "Backlog",
+      "pos": 1,
+      "closed": false
+    },
+    {
+      "id": "2", 
+      "name": "To Do",
+      "pos": 2,
+      "closed": false
+    },
+    {
+      "id": "3",
+      "name": "Doing", 
+      "pos": 3,
+      "closed": false
+    },
+    {
+      "id": "4",
+      "name": "Review",
+      "pos": 4,
+      "closed": false
+    },
+    {
+      "id": "5",
+      "name": "Done",
+      "pos": 5,
+      "closed": false
+    }
+  ],
+  "cards": [
+    {
+      "id": "c1",
+      "name": "Sistema de Autenticación Web",
+      "desc": "Implementar login y registro de usuarios",
+      "listId": "1",
+      "pos": 1,
+      "checklists": [
+        {
+          "name": "Pasos Frontend",
+          "items": [
+            "Crear componente de Login",
+            "Crear componente de Registro",
+            "Integrar con API de autenticación",
+            "Manejo de estados de autenticación"
+          ]
+        },
+        {
+          "name": "Pasos Backend",
+          "items": [
+            "Crear endpoint /auth/login",
+            "Crear endpoint /auth/register",
+            "Implementar JWT tokens",
+            "Validación de credenciales"
+          ]
+        }
+      ],
+      "labels": ["Web", "Alta Prioridad", "Backend", "Frontend"]
+    },
+    {
+      "id": "c2",
+      "name": "Gestión de Proyectos",
+      "desc": "CRUD para gestionar proyectos de desarrollo",
+      "listId": "1",
+      "pos": 2,
+      "checklists": [
+        {
+          "name": "Funcionalidades",
+          "items": [
+            "Crear proyecto",
+            "Listar proyectos",
+            "Editar proyecto",
+            "Eliminar proyecto",
+            "Asignar usuarios a proyecto"
+          ]
+        }
+      ],
+      "labels": ["Web", "Media Prioridad", "CRUD"]
+    },
+    {
+      "id": "c3",
+      "name": "Dashboard de Planificación",
+      "desc": "Interfaz para planificar sprints y tareas",
+      "listId": "2",
+      "pos": 1,
+      "checklists": [
+        {
+          "name": "Componentes UI",
+          "items": [
+            "Vista de tablero Kanban",
+            "Creación de tarjetas",
+            "Drag & drop funcionalidad",
+            "Filtros y búsqueda"
+          ]
+        }
+      ],
+      "labels": ["Web", "Frontend", "UX"]
+    },
+    {
+      "id": "c4",
+      "name": "Sistema de Análisis UML",
+      "desc": "Generación y visualización de diagramas UML",
+      "listId": "2",
+      "pos": 2,
+      "checklists": [
+        {
+          "name": "Funcionalidades",
+          "items": [
+            "Editor de diagramas de clases",
+            "Editor de diagramas de secuencia",
+            "Export a PlantUML",
+            "Validación de sintaxis"
+          ]
+        }
+      ],
+      "labels": ["Web", "Análisis", "UML"]
+    },
+    {
+      "id": "c5",
+      "name": "Herramientas de Diseño",
+      "desc": "Gestión de tokens de diseño y wireframes",
+      "listId": "2",
+      "pos": 3,
+      "checklists": [
+        {
+          "name": "Features",
+          "items": [
+            "Editor de tokens de diseño",
+            "Generador de wireframes",
+            "Preview de componentes",
+            "Export de assets"
+          ]
+        }
+      ],
+      "labels": ["Web", "Diseño", "UX"]
+    },
+    {
+      "id": "c6",
+      "name": "Entorno de Codificación",
+      "desc": "IDE integrado para desarrollo",
+      "listId": "3",
+      "pos": 1,
+      "checklists": [
+        {
+          "name": "Componentes",
+          "items": [
+            "Editor de código",
+            "Terminal integrado",
+            "Git integration",
+            "Autocomplete y snippets"
+          ]
+        }
+      ],
+      "labels": ["Web", "IDE", "Desarrollo"]
+    },
+    {
+      "id": "c7",
+      "name": "Sistema de Pruebas",
+      "desc": "Ejecución y gestión de tests automatizados",
+      "listId": "3",
+      "pos": 2,
+      "checklists": [
+        {
+          "name": "Testing",
+          "items": [
+            "Configuración Jest/Vitest",
+            "Tests unitarios",
+            "Tests de integración",
+            "Coverage reports"
+          ]
+        }
+      ],
+      "labels": ["Web", "Testing", "QA"]
+    },
+    {
+      "id": "c8",
+      "name": "Pipeline de Despliegue",
+      "desc": "Automatización de deploy y CI/CD",
+      "listId": "4",
+      "pos": 1,
+      "checklists": [
+        {
+          "name": "DevOps",
+          "items": [
+            "Docker containers",
+            "Docker Compose setup",
+            "Scripts de deployment",
+            "Health checks"
+          ]
+        }
+      ],
+      "labels": ["Web", "DevOps", "Docker"]
+    },
+    {
+      "id": "c9",
+      "name": "Monitoreo y Métricas",
+      "desc": "Dashboard de métricas y alertas",
+      "listId": "4",
+      "pos": 2,
+      "checklists": [
+        {
+          "name": "Observabilidad",
+          "items": [
+            "Métricas de aplicación",
+            "Logs centralizados",
+            "Alertas automáticas",
+            "Dashboard de performance"
+          ]
+        }
+      ],
+      "labels": ["Web", "Monitoreo", "Métricas"]
+    }
+  ],
+  "labels": [
+    {
+      "id": "label1",
+      "name": "Web",
+      "color": "blue"
+    },
+    {
+      "id": "label2", 
+      "name": "Alta Prioridad",
+      "color": "red"
+    },
+    {
+      "id": "label3",
+      "name": "Media Prioridad", 
+      "color": "yellow"
+    },
+    {
+      "id": "label4",
+      "name": "Frontend",
+      "color": "green"
+    },
+    {
+      "id": "label5",
+      "name": "Backend",
+      "color": "purple"
+    },
+    {
+      "id": "label6",
+      "name": "DevOps",
+      "color": "orange"
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+# DevFlow - Wireframes
+
+## 1. Página de Login
+```
++--------------------------------------------------+
+|                   DevFlow                        |
+|                 [Logo/Brand]                     |
++--------------------------------------------------+
+|                                                  |
+|     +--------------------------------+           |
+|     |         Iniciar Sesión         |           |
+|     +--------------------------------+           |
+|     |                                |           |
+|     | Email:                         |           |
+|     | [____________________]         |           |
+|     |                                |           |
+|     | Contraseña:                    |           |
+|     | [____________________]         |           |
+|     |                                |           |
+|     | [ ] Recordarme                 |           |
+|     |                                |           |
+|     |    [Iniciar Sesión]           |           |
+|     |                                |           |
+|     | ¿No tienes cuenta?             |           |
+|     | [Registrarse]                  |           |
+|     |                                |           |
+|     +--------------------------------+           |
+|                                                  |
++--------------------------------------------------+
+```
+
+## 2. Dashboard Principal
+```
++--------------------------------------------------+
+| DevFlow | [Perfil] [Notificaciones] [Logout]   |
++--------------------------------------------------+
+| [Plan] [Análisis] [Diseño] [Código] [Test] [Deploy] [Monitor] |
++--------------------------------------------------+
+|                                                  |
+| Proyectos Recientes:                            |
+| +------------+ +------------+ +------------+     |
+| |  Proyecto  | |  Proyecto  | |  Proyecto  |     |
+| |     A      | |     B      | |     C      |     |
+| | [Estado]   | | [Estado]   | | [Estado]   |     |
+| +------------+ +------------+ +------------+     |
+|                                                  |
+| Tareas Pendientes:                              |
+| +------------------------------------------+     |
+| | [ ] Implementar autenticación            |     |
+| | [x] Diseñar mockups                      |     |
+| | [ ] Configurar pipeline CI/CD            |     |
+| +------------------------------------------+     |
+|                                                  |
+| Métricas Rápidas:                               |
+| [4 Proyectos] [12 Tareas] [85% Tests] [✓ Deploy]|
+|                                                  |
++--------------------------------------------------+
+```
+
+## 3. Página de Planificación (Kanban)
+```
++--------------------------------------------------+
+| DevFlow - Planificación                         |
++--------------------------------------------------+
+| [Nuevo Proyecto] [Filtros] [Búscar...________] |
++--------------------------------------------------+
+|                                                  |
+| Backlog      | To Do       | Doing      | Done  |
+| +----------+ | +----------+ | +--------+ | +---+ |
+| |[Tarea 1] | | |[Tarea 4] | | |[Tarea]| | |[T]| |
+| |Alta Prio | | |Media     | | |En Prog|| | |✓ | |
+| +----------+ | +----------+ | +--------+ | +---+ |
+| |[Tarea 2] | | |[Tarea 5] | | |[Tarea]| | |[T]| |
+| |Baja Prio | | |Alta      | | |Review || | |✓ | |
+| +----------+ | +----------+ | +--------+ | +---+ |
+| |[Tarea 3] | | |[+ Nueva] | | |[+ Add]| | |[+]| |
+| |Media     | | |  Tarea   | | |       | | |   | |
+| +----------+ | +----------+ | +--------+ | +---+ |
+|                                                  |
+| [+ Nueva Tarea]                                 |
+|                                                  |
++--------------------------------------------------+
+```
+
+## 4. Página de Análisis UML
+```
++--------------------------------------------------+
+| DevFlow - Análisis UML                          |
++--------------------------------------------------+
+| [Nuevo Diagrama] [Importar] [Exportar] [Guard] |
++--------------------------------------------------+
+|                      |                          |
+| Tipos de Diagrama:   | Editor UML:             |
+| [ ] Clases           | +---------------------+  |
+| [x] Secuencia        | |@startuml            |  |
+| [ ] Actividad        | |class User {         |  |
+| [ ] Casos de Uso     | |  +id: string        |  |
+| [ ] Estados          | |  +email: string     |  |
+|                      | |  +login()           |  |
+| Plantillas:          | |}                    |  |
+| [Autenticación]      | |class Project {      |  |
+| [CRUD Básico]        | |  +name: string      |  |
+| [API REST]           | |}                    |  |
+|                      | |User --> Project     |  |
+| Validación:          | |@enduml              |  |
+| ✓ Sintaxis correcta  | +---------------------+  |
+| ✓ Sin errores        |                          |
+|                      | Preview:                 |
+|                      | [Diagrama Renderizado]   |
+|                      |                          |
++--------------------------------------------------+
+```
+
+## 5. Página de Diseño
+```
++--------------------------------------------------+
+| DevFlow - Diseño                               |
++--------------------------------------------------+
+| [Tokens] [Wireframes] [Componentes] [Assets]   |
++--------------------------------------------------+
+|                     |                           |
+| Design Tokens:      | Preview:                  |
+| +----------------+  | +---------------------+   |
+| | Colores:       |  | |  [Botón Primario]  |   |
+| | Primary: #007f |  | |  [Botón Secundario]|   |
+| | Secondary: #6c |  | |                     |   |
+| |                |  | |  Input: [________] |   |
+| | Tipografía:    |  | |                     |   |
+| | H1: 2rem bold  |  | |  [Card Example]    |   |
+| | Body: 1rem     |  | |  Lorem ipsum...    |   |
+| |                |  | |                     |   |
+| | Espaciado:     |  | +---------------------+   |
+| | sm: 0.5rem     |  |                           |
+| | md: 1rem       |  | Wireframes:               |
+| | lg: 1.5rem     |  | [ASCII Editor________]    |
+| +----------------+  | [Componente Library]      |
+|                     |                           |
+| [Generar CSS]       | [Exportar Assets]         |
+|                     |                           |
++--------------------------------------------------+
+```
+
+## 6. Página de Codificación
+```
++--------------------------------------------------+
+| DevFlow - IDE                                   |
++--------------------------------------------------+
+| [Nuevo] [Abrir] [Guardar] [Ejecutar] [Debug]   |
++--------------------------------------------------+
+|              |                                  |
+| Explorador:  | Editor de Código:               |
+| +----------+ | +-----------------------------+ |
+| |📁 src/    | | |// auth.service.ts         | |
+| | 📄 app.ts | | |import { Injectable } from  | |
+| | 📄 auth.ts| | |'@nestjs/common';           | |
+| |📁 tests/  | | |                            | |
+| | 📄 auth.te| | |@Injectable()               | |
+| |📁 docs/   | | |export class AuthService {  | |
+| +----------+ | |  async login(email, pass){ | |
+|              | |    // lógica aquí          | |
+| Terminal:    | |  }                         | |
+| +----------+ | |}                          | |
+| |$ npm test| | +-----------------------------+ |
+| |✓ 15 pass | |                              |
+| |✗ 2 fail  | | Autocomplete: [Sugerencias]  |
+| |          | | Git: [M] auth.ts modified    |
+| +----------+ |                              |
+|              |                              |
++--------------------------------------------------+
+```
+
+## 7. Página de Testing
+```
++--------------------------------------------------+
+| DevFlow - Testing                               |
++--------------------------------------------------+
+| [Ejecutar Tests] [Configurar] [Reportes] [Cover]|
++--------------------------------------------------+
+|                     |                           |
+| Test Suites:        | Resultados:              |
+| +----------------+  | +---------------------+   |
+| | ✓ Auth Tests   |  | | ✓ should login user |   |
+| | ✗ User Tests   |  | | ✗ should hash pass  |   |
+| | ⏳ API Tests   |  | | ⏳ testing...       |   |
+| | ⚪ E2E Tests   |  | |                     |   |
+| +----------------+  | | Total: 15/17 pass   |   |
+|                     | | Coverage: 85%       |   |
+| Configuración:      | +---------------------+   |
+| +----------------+  |                           |
+| | Framework:     |  | Coverage Report:          |
+| | [Jest ▼]      |  | +---------------------+   |
+| |                |  | |📄 auth.service.ts   |   |
+| | Timeout: 5000ms|  | |   Lines: 95%        |   |
+| | Parallel: ✓    |  | |📄 user.service.ts   |   |
+| | Watch: ✓       |  | |   Lines: 78%        |   |
+| +----------------+  | +---------------------+   |
+|                     |                           |
++--------------------------------------------------+
+```
+
+## 8. Página de Despliegue
+```
++--------------------------------------------------+
+| DevFlow - Despliegue                            |
++--------------------------------------------------+
+| [Build] [Deploy] [Rollback] [Environments]     |
++--------------------------------------------------+
+|                     |                           |
+| Pipeline Status:    | Logs de Deploy:          |
+| +----------------+  | +---------------------+   |
+| | ✓ Build        |  | |[2024-09-11 10:30]   |   |
+| | ✓ Test         |  | |Starting build...    |   |
+| | ✓ Security     |  | |Installing deps...   |   |
+| | ⏳ Deploy      |  | |Running tests...     |   |
+| | ⚪ Verify      |  | |✓ All tests passed   |   |
+| +----------------+  | |Deploying to prod... |   |
+|                     | |✓ Deploy successful  |   |
+| Ambientes:          | +---------------------+   |
+| +----------------+  |                           |
+| | Dev: ✓ Active  |  | Health Checks:            |
+| | Test: ✓ Active |  | +---------------------+   |
+| | Prod: ⏳ Deploy|  | |🟢 API: 200ms        |   |
+| +----------------+  | |🟢 DB: Connected     |   |
+|                     | |🟢 Cache: Redis OK   |   |
+| [Manual Deploy]     | +---------------------+   |
+| [Schedule Deploy]   |                           |
+|                     |                           |
++--------------------------------------------------+
+```
+
+## 9. Página de Monitoreo
+```
++--------------------------------------------------+
+| DevFlow - Monitoreo                             |
++--------------------------------------------------+
+| [Métricas] [Logs] [Alertas] [Dashboards]       |
++--------------------------------------------------+
+|                     |                           |
+| Métricas en Tiempo: | Alertas Activas:         |
+| +----------------+  | +---------------------+   |
+| | CPU: 45% ████▌ |  | |🔴 High Memory Usage |   |
+| | RAM: 78% ███████▋|  | |   Server-01         |   |
+| | Disk: 23% ██▎  |  | |🟡 Slow Response     |   |
+| | Network: ↑↓    |  | |   API Endpoint      |   |
+| +----------------+  | +---------------------+   |
+|                     |                           |
+| Gráficos:           | Logs Recientes:           |
+| +----------------+  | +---------------------+   |
+| | [📊 Response   |  | |[ERROR] 500 - API    |   |
+| |  Time Graph]   |  | |[INFO] User login    |   |
+| | [📈 Traffic    |  | |[WARN] High memory   |   |
+| |  Volume]       |  | |[INFO] Deploy OK     |   |
+| +----------------+  | +---------------------+   |
+|                     |                           |
+| [Configurar Alertas] [Exportar Métricas]       |
+|                     |                           |
++--------------------------------------------------+
+```
+
+## 10. Modal de Nueva Tarea
+```
+                    +------------------------+
+                    |    Nueva Tarea         |
+                    +------------------------+
+                    |                        |
+                    | Título:                |
+                    | [________________]     |
+                    |                        |
+                    | Descripción:           |
+                    | [________________]     |
+                    | [________________]     |
+                    |                        |
+                    | Prioridad:             |
+                    | [Alta ▼]              |
+                    |                        |
+                    | Asignado a:            |
+                    | [Usuario ▼]           |
+                    |                        |
+                    | Fecha límite:          |
+                    | [📅 DD/MM/YYYY]       |
+                    |                        |
+                    | Etiquetas:             |
+                    | [Frontend] [x]         |
+                    | [+ Agregar]            |
+                    |                        |
+                    |    [Cancelar] [Crear]  |
+                    +------------------------+
+```

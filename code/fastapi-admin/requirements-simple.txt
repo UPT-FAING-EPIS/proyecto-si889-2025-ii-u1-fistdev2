@@ -1,0 +1,10 @@
+# FastAPI Admin Service - Requirements (Simplified)
+# Versiones flexibles para mejor compatibilidad
+
+fastapi
+uvicorn[standard]
+pydantic
+python-jose[cryptography] 
+python-multipart
+psutil
+PyJWT

@@ -1,0 +1,55 @@
+# Prompts IA para DevFlow
+
+## Prompts para Historias de Usuario
+
+### Prompt para Login Web
+"Como usuario del sistema DevFlow, necesito poder autenticarme en la aplicación web para acceder a mis proyectos y herramientas de desarrollo. La historia debe incluir formulario de login, validación de credenciales, manejo de errores y redirección post-login."
+
+### Prompt para Gestión de Proyectos  
+"Como desarrollador, necesito poder crear, editar y gestionar proyectos de desarrollo dentro de DevFlow para organizar mi trabajo. Incluir CRUD completo, asignación de usuarios, y estados de proyecto."
+
+### Prompt para Dashboard de Planificación
+"Como project manager, necesito un dashboard visual tipo Kanban para planificar sprints y gestionar tareas del equipo. Debe incluir drag & drop, filtros, y métricas básicas."
+
+## Prompts para Código
+
+### Prompt para Auth Service
+"Genera un servicio de autenticación en TypeScript usando NestJS que incluya: registro de usuarios, login con JWT, validación de tokens, middleware de autenticación, y manejo de roles. Usar bcrypt para hashing de passwords."
+
+### Prompt para Frontend Auth Components
+"Crea componentes React/Next.js para autenticación que incluyan: formulario de login responsivo, formulario de registro, validación client-side, manejo de estados de loading/error, y integración con context API para estado global."
+
+### Prompt para Database Schema
+"Diseña esquema Prisma para DevFlow con entidades: Usuario (id, email, password, roles), Proyecto (id, nombre, descripción, fechas, estado), Tarea (id, título, descripción, estado, prioridad, proyecto_id, usuario_id). Incluir relaciones apropiadas."
+
+## Prompts para Tests
+
+### Prompt para Tests Unitarios
+"Genera tests Jest para el AuthService que cubran: registro exitoso, login válido/inválido, validación de JWT, casos edge, y mocks de dependencias. Coverage mínimo 90%."
+
+### Prompt para Tests de Integración
+"Crea tests de integración usando Supertest para endpoints de auth: POST /auth/register, POST /auth/login, GET /auth/profile. Incluir setup de DB de test y cleanup."
+
+## Prompts para UI/UX
+
+### Prompt para Wireframes Dashboard
+"Genera wireframe ASCII para dashboard principal de DevFlow que incluya: navbar con navegación, sidebar con menú de herramientas, área principal para kanban board, panel lateral para detalles de tarea."
+
+### Prompt para Tokens de Diseño
+"Define sistema de tokens de diseño para DevFlow incluyendo: paleta de colores (primarios, secundarios, grises), tipografía (headers, body, code), espaciado (margins, paddings), shadows y borders. Focus en accesibilidad y tema oscuro/claro."
+
+## Prompts para DevOps
+
+### Prompt para Docker Setup
+"Genera Dockerfile multi-stage para aplicación Next.js y Dockerfile para NestJS backend. Crear docker-compose.yml que incluya: frontend, backend, PostgreSQL, Redis, volúmenes persistentes, y networks apropiadas."
+
+### Prompt para Scripts de Deploy
+"Crea scripts de deployment que incluyan: build de aplicaciones, verificación de health checks, rolling deployment, rollback automático en caso de fallo, y notificaciones de estado."
+
+## Prompts para Documentación
+
+### Prompt para README
+"Escribe README completo para DevFlow que incluya: descripción del proyecto, arquitectura, setup local, comandos principales, contribución guidelines, y troubleshooting común."
+
+### Prompt para API Documentation
+"Genera documentación OpenAPI/Swagger para todos los endpoints de DevFlow incluyendo: descripción, parámetros, responses, ejemplos de uso, y códigos de error."

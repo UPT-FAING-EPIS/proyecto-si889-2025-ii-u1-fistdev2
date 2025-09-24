@@ -1,0 +1,156 @@
+@startuml DevFlow_Sequence_Auth
+
+!theme plain
+skinparam participantPadding 20
+skinparam boxPadding 10
+
+title Secuencia de Autenticación - DevFlow
+
+actor Usuario as U
+participant "Frontend\n(Next.js)" as F
+participant "API Gateway" as API
+participant "Auth Controller" as AC
+participant "Auth Service" as AS
+participant "User Repository" as UR
+participant "Cache Service" as CS
+participant "Database\n(PostgreSQL)" as DB
+
+== Proceso de Login ==
+
+U -> F: Introduce credenciales
+activate F
+
+F -> F: Valida formulario (client-side)
+alt Validación exitosa
+    F -> API: POST /auth/login\n{email, password}
+    activate API
+    
+    API -> AC: login(credentials)
+    activate AC
+    
+    AC -> AS: validateUser(email, password)
+    activate AS
+    
+    AS -> UR: findByEmail(email)
+    activate UR
+    
+    UR -> DB: SELECT * FROM users WHERE email = ?
+    activate DB
+    DB --> UR: User data
+    deactivate DB
+    
+    UR --> AS: User entity
+    deactivate UR
+    
+    AS -> AS: bcrypt.compare(password, hashedPassword)
+    
+    alt Password válido
+        AS -> AS: generateJWT(user)
+        AS -> CS: set(session_key, user_data, ttl)
+        activate CS
+        CS --> AS: OK
+        deactivate CS
+        
+        AS --> AC: {token, user}
+        deactivate AS
+        
+        AC --> API: 200 OK\n{token, user, expiresIn}
+        deactivate AC
+        
+        API --> F: 200 OK\n{token, user, expiresIn}
+        deactivate API
+        
+        F -> F: Guarda token en localStorage
+        F -> F: Actualiza AuthContext
+        F -> F: Redirige a Dashboard
+        
+        F --> U: Login exitoso
+        
+    else Password inválido
+        AS --> AC: AuthenticationError
+        deactivate AS
+        AC --> API: 401 Unauthorized
+        deactivate AC
+        API --> F: 401 Unauthorized
+        deactivate API
+        F --> U: Error: Credenciales inválidas
+    end
+    
+else Validación fallida
+    F --> U: Errores de validación
+end
+
+deactivate F
+
+== Proceso de Acceso a Recurso Protegido ==
+
+U -> F: Navega a Dashboard
+activate F
+
+F -> F: Verifica token en localStorage
+alt Token existe
+    F -> API: GET /projects\nAuthorization: Bearer {token}
+    activate API
+    
+    API -> API: Middleware: verifyJWT(token)
+    
+    alt Token válido
+        API -> CS: get(session_key)
+        activate CS
+        CS --> API: User session data
+        deactivate CS
+        
+        API -> AC: getProjects(userId)
+        activate AC
+        
+        AC --> API: Projects data
+        deactivate AC
+        
+        API --> F: 200 OK\n{projects}
+        deactivate API
+        
+        F -> F: Renderiza Dashboard con datos
+        F --> U: Dashboard cargado
+        
+    else Token inválido/expirado
+        API --> F: 401 Unauthorized
+        deactivate API
+        
+        F -> F: Limpia localStorage
+        F -> F: Actualiza AuthContext (logout)
+        F -> F: Redirige a Login
+        
+        F --> U: Sesión expirada, redirigido a login
+    end
+    
+else Token no existe
+    F -> F: Redirige a Login
+    F --> U: Redirigido a login
+end
+
+deactivate F
+
+== Proceso de Logout ==
+
+U -> F: Hace click en Logout
+activate F
+
+F -> API: POST /auth/logout\nAuthorization: Bearer {token}
+activate API
+
+API -> CS: delete(session_key)
+activate CS
+CS --> API: OK
+deactivate CS
+
+API --> F: 200 OK
+deactivate API
+
+F -> F: Limpia localStorage
+F -> F: Actualiza AuthContext
+F -> F: Redirige a Login
+
+F --> U: Logout exitoso
+deactivate F
+
+@enduml

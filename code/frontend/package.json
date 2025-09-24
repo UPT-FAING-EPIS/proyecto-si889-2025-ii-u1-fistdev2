@@ -1,0 +1,53 @@
+{
+  "name": "devflow-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:auth": "playwright test auth.spec.ts",
+    "test:e2e:projects": "playwright test projects.spec.ts",
+    "test:e2e:boards": "playwright test boards.spec.ts",
+    "test:e2e:collab": "playwright test collaboration.spec.ts",
+    "test:e2e:notifications": "playwright test notifications.spec.ts",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.0.18",
+    "@monaco-editor/react": "^4.6.0",
+    "axios": "^1.5.0",
+    "clsx": "^2.0.0",
+    "jose": "^6.1.0",
+    "js-cookie": "^3.0.5",
+    "monaco-editor": "^0.44.0",
+    "next": "^14.2.32",
+    "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.47.0",
+    "react-hot-toast": "^2.4.1",
+    "react-query": "^3.39.3",
+    "react-syntax-highlighter": "^5.8.0",
+    "socket.io-client": "^4.8.1",
+    "tailwindcss": "^3.3.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/js-cookie": "^3.0.4",
+    "@types/node": "^20.8.0",
+    "@types/react": "^18.2.25",
+    "@types/react-beautiful-dnd": "^13.1.8",
+    "@types/react-dom": "^18.2.10",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.51.0",
+    "eslint-config-next": "14.0.0",
+    "postcss": "^8.4.31",
+    "typescript": "^5.2.2"
+  }
+}

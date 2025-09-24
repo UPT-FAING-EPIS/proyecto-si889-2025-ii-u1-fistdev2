@@ -1,0 +1,487 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  roles     String[] @default(["user"])
+  lastSeen  DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  projects         Project[]
+  assignedTasks    Task[] @relation("AssignedTasks")
+  projectMembers   ProjectMember[]
+  invitations      Invitation[] @relation("InvitedBy")
+  activities       Activity[]
+  taskComments     TaskComment[]
+  taskActivities   TaskActivity[]
+  notifications    Notification[]
+  
+  @@map("users")
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(PLANNING)
+  startDate   DateTime      @default(now())
+  endDate     DateTime?
+  userId      String
+  isShared    Boolean       @default(false)
+  
+  // Nuevos campos adicionales
+  type        String?       // tipo de proyecto (web, mobile, desktop, api, fullstack)
+  priority    String?       // prioridad (baja, media, alta, critica)
+  budget      Float?        // presupuesto
+  client      String?       // cliente
+  technologies String[]     @default([]) // tecnologías
+  repository  String?       // repositorio
+  notes       String?       // notas adicionales
+  progress    Int?          @default(0) // progreso del proyecto
+  
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relaciones
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks          Task[]
+  umlDiagrams    UMLDiagram[]
+  designTokens   DesignTokens[]
+  codeFiles      CodeFile[]
+  testResults    TestResult[]
+  deployments    Deployment[]
+  metrics        Metric[]
+  alerts         Alert[]
+  members        ProjectMember[]
+  invitations    Invitation[]
+  activities     Activity[]
+  boards         Board[]
+
+  @@map("projects")
+}
+
+model Task {
+  id               String     @id @default(cuid())
+  title            String
+  description      String?
+  status           TaskStatus @default(BACKLOG)
+  priority         Priority   @default(MEDIUM)
+  projectId        String
+  assignedUserId   String?
+  estimatedHours   Int?
+  actualHours      Int?
+  dueDate          DateTime?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  // Relaciones
+  project      Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignedUser User?   @relation("AssignedTasks", fields: [assignedUserId], references: [id])
+
+  @@map("tasks")
+}
+
+model UMLDiagram {
+  id        String      @id @default(cuid())
+  type      DiagramType
+  title     String
+  content   String      @db.Text
+  projectId String
+  version   Int         @default(1)
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Relaciones
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("uml_diagrams")
+}
+
+model DesignTokens {
+  id           String   @id @default(cuid())
+  name         String
+  colors       Json
+  typography   Json
+  spacing      Json
+  borderRadius Json
+  shadows      Json
+  projectId    String
+  version      Int      @default(1)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relaciones
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("design_tokens")
+}
+
+model CodeFile {
+  id           String   @id @default(cuid())
+  filename     String
+  filepath     String
+  content      String   @db.Text
+  language     String
+  projectId    String
+  size         Int      @default(0)
+  lastModified DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relaciones
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, filepath])
+  @@map("code_files")
+}
+
+model TestResult {
+  id           String     @id @default(cuid())
+  testSuite    String
+  testName     String
+  status       TestStatus @default(PENDING)
+  passed       Int        @default(0)
+  failed       Int        @default(0)
+  skipped      Int        @default(0)
+  coverage     Float      @default(0)
+  duration     Int        @default(0)
+  projectId    String
+  errorMessage String?    @db.Text
+  logs         String?    @db.Text
+  runAt        DateTime   @default(now())
+  createdAt    DateTime   @default(now())
+
+  // Relaciones
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("test_results")
+}
+
+model Deployment {
+  id          String       @id @default(cuid())
+  version     String
+  environment String
+  status      DeployStatus @default(PENDING)
+  projectId   String
+  buildUrl    String?
+  deployUrl   String?
+  logs        String?      @db.Text
+  startedAt   DateTime     @default(now())
+  completedAt DateTime?
+  createdAt   DateTime     @default(now())
+
+  // Relaciones
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("deployments")
+}
+
+model Metric {
+  id        String   @id @default(cuid())
+  name      String
+  value     Float
+  unit      String
+  timestamp DateTime @default(now())
+  projectId String
+  tags      Json     @default("{}")
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("metrics")
+}
+
+model Alert {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  condition   String
+  threshold   Float
+  severity    AlertSeverity @default(MEDIUM)
+  isActive    Boolean       @default(true)
+  projectId   String
+  triggeredAt DateTime?
+  resolvedAt  DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relaciones
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("alerts")
+}
+
+// Enums
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskStatus {
+  BACKLOG
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  TESTING
+  DONE
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum DiagramType {
+  CLASS
+  SEQUENCE
+  ACTIVITY
+  USE_CASE
+  STATE
+  COMPONENT
+  DEPLOYMENT
+}
+
+enum TestStatus {
+  PENDING
+  RUNNING
+  PASSED
+  FAILED
+  SKIPPED
+  ERROR
+}
+
+enum DeployStatus {
+  PENDING
+  BUILDING
+  DEPLOYING
+  SUCCESS
+  FAILED
+  CANCELLED
+  ROLLBACK
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// Nuevos modelos para colaboración
+
+model ProjectMember {
+  id        String        @id @default(cuid())
+  projectId String
+  userId    String
+  role      MemberRole    @default(MEMBER)
+  joinedAt  DateTime      @default(now())
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  // Relaciones
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@map("project_members")
+}
+
+model Invitation {
+  id        String           @id @default(cuid())
+  projectId String
+  email     String
+  token     String           @unique
+  invitedBy String
+  status    InvitationStatus @default(PENDING)
+  expiresAt DateTime
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  // Relaciones
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  inviter   User    @relation("InvitedBy", fields: [invitedBy], references: [id], onDelete: Cascade)
+
+  @@index([email])
+  @@index([token])
+  @@map("invitations")
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+  action    String
+  payload   Json     @default("{}")
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([createdAt])
+  @@map("activities")
+}
+
+// Modelos para tableros Kanban
+
+model Board {
+  id          String   @id @default(cuid())
+  projectId   String
+  name        String
+  description String?
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  project Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  columns Column[]
+
+  @@map("boards")
+}
+
+model Column {
+  id        String   @id @default(cuid())
+  boardId   String
+  title     String
+  position  Int
+  color     String   @default("blue")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  board Board      @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  tasks BoardTask[]
+
+  @@map("columns")
+}
+
+model BoardTask {
+  id             String    @id @default(cuid())
+  columnId       String
+  title          String
+  description    String?
+  priority       Priority  @default(MEDIUM)
+  assignedTo     String?
+  estimatedHours Int?
+  actualHours    Int       @default(0)
+  tags           String[]  @default([])
+  position       Int
+  status         String
+  dueDate        DateTime?
+  createdBy      String
+  lastModifiedBy String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relaciones
+  column     Column         @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  comments   TaskComment[]
+  activities TaskActivity[]
+
+  @@map("board_tasks")
+}
+
+model TaskComment {
+  id        String   @id @default(cuid())
+  taskId    String
+  userId    String
+  comment   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  task BoardTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("task_comments")
+}
+
+model TaskActivity {
+  id        String   @id @default(cuid())
+  taskId    String
+  userId    String
+  action    String
+  details   String
+  oldValue  String?
+  newValue  String?
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  task BoardTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([createdAt])
+  @@map("task_activities")
+}
+
+model Notification {
+  id        String             @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  data      Json?              // Datos adicionales (projectId, invitationId, etc.)
+  read      Boolean            @default(false)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  // Relaciones
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+// Nuevos enums
+
+enum NotificationType {
+  PROJECT_INVITATION
+  INVITATION_ACCEPTED
+  INVITATION_REJECTED
+  MEMBER_ADDED
+  MEMBER_REMOVED
+  PROJECT_SHARED
+  TASK_ASSIGNED
+  TASK_COMPLETED
+  COMMENT_ADDED
+}
+
+enum MemberRole {
+  OWNER
+  MEMBER
+  VIEWER
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
